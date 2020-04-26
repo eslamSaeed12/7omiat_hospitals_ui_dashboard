@@ -1,0 +1,42 @@
+@font-face {
+    src: url('/fonts/Bahij_TheSansArabic-Bold.ttf');
+    font-family: bahij;
+}
+
+
+
+// colors 
+
+$P-PRIMARY:#0652DD;
+$P-SUCCESS : #32ff7e;
+$P-WARNING:#fff200;
+$P-DANGER:#ff3838;
+$P-INFO:#18dcff;
+
+
+$F-DARK:#4b4b4b;
+$F-WHITE:#ffffff;
+// end colors 
+
+$primary-color: $P-PRIMARY;
+@import 'loaders.css/src/animations/ball-scale-multiple.scss';
+
+.loader-hidden {
+    display: none;
+}
+
+.loader-active {
+    display: block;
+}
+
+
+
+body {
+    font-family: bahij;
+    color: $F-DARK;
+    background-color: #f8f8f8;
+}
+
+a {
+    color: "inherit"
+}
