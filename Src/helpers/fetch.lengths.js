@@ -24,6 +24,9 @@ export const fetches = async (jwt) => {
       return Error("لا يوجد اتصال بالخادم , تاكد من الاتصال بالانترنت");
     }
 
+    if (e.message === "Request failed with status code 401") {
+      return Error(e.response.data.message);
+    }
     return Error(e);
   }
 };

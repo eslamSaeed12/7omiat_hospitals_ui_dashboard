@@ -66,8 +66,8 @@ class MyApp extends App {
           </Head>
           <RTL>
             <NoSsr>
-              <CssBaseline />
               <ThemeProvider theme={this.theme}>
+                <CssBaseline />
                 <Component {...pageProps} />
               </ThemeProvider>
             </NoSsr>

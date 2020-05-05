@@ -1,5 +1,5 @@
 import { fetches } from "../helpers/fetch.lengths";
-
+import axiosBase from "../helpers/axios.base";
 const FetchDataStatus = (payload) => {
   return {
     type: "FETCH_DATA_STATUS",
@@ -48,5 +48,31 @@ export const FetchUserInformation = (payload) => {
   return {
     type: "FETCH_USER_INFO",
     payload,
+  };
+};
+
+const fetchUserDone = () => {
+  return {
+    type: "FETCH_USER_DONE",
+  };
+};
+
+const fetchUserFail = () => {
+  return {
+    type: "FETCH_USER_FAIL",
+  };
+};
+
+export const syncfetchUserInofrmation = (jwt, id) => {
+  return (dispatch) => {
+    axiosBase(jwt)
+      .get(`user/${id}`)
+      .then((e) => {
+        dispatch(FetchUserInformation(e.data));
+        dispatch(fetchUserDone());
+      })
+      .catch((err) => {
+        dispatch(fetchUserFail(err.message));
+      });
   };
 };

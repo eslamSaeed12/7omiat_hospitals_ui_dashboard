@@ -23,8 +23,11 @@ import {
   HomeRounded,
   ErrorOutlineRounded,
   ArrowDropDown,
+  DescriptionRounded,
 } from "@material-ui/icons";
-import nextCookies from "next-cookies";
+import cookie from "js-cookie";
+import { useRouter } from "next/router";
+
 const categories = [
   {
     name: "الرئيسية",
@@ -32,28 +35,33 @@ const categories = [
     icon: HomeRounded,
   },
   {
-    name: "ألسجلات",
-    href: "/profile/logs",
+    name: "السجلات",
+    href: "/panel/logs",
+    icon: DescriptionRounded,
+  },
+  {
+    name: "الاعطال",
+    href: "/panel/errors",
     icon: ErrorOutlineRounded,
   },
   {
     name: "المشرفين",
-    href: "/panel/admins",
+    href: "/panel/users",
     icon: SupervisedUserCircleSharp,
   },
   {
     name: "الصلاحيات",
-    href: "panel/roles",
+    href: "/panel/roles",
     icon: Lock,
   },
   {
     name: "المستشفيات",
-    href: "panel/hospitals",
+    href: "/panel/hospitals",
     icon: LocalHospital,
   },
   {
     name: "المحافظات",
-    href: "panel/govs",
+    href: "/panel/govs",
     icon: Map,
   },
 ];
@@ -118,7 +126,7 @@ const SideBar = (props) => {
     const list = categories.map((cat, index) => {
       return (
         <Fragment key={index.toString()}>
-          <Link href={cat.href}>
+          <Link href={cat.href} >
             <Button>
               <Box
                 textAlign="center"
@@ -167,6 +175,12 @@ const SideBar = (props) => {
 const HomePage = (props) => {
   const [loading, setLoading] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const Router = useRouter();
+
+  const logoutHandeler = () => {
+    cookie.remove("META-AUTH-TOKEN", { path: "/" });
+    Router.push("/panel/login");
+  };
 
   const clases = styles();
 
@@ -182,9 +196,7 @@ const HomePage = (props) => {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    console.log(props.authUser);
-  }, [props.authUser]);
+  useEffect(() => {}, [props.authUser]);
 
   if (loading) {
     return (
@@ -222,7 +234,7 @@ const HomePage = (props) => {
       >
         <Container>
           <Box>
-            {props.authUser.username ? (
+            {props.authUserLoad ? (
               <Fab
                 style={{ backgroundColor: colors.primary }}
                 variant="extended"
@@ -246,8 +258,10 @@ const HomePage = (props) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>الصفحة الشخصية</MenuItem>
-              <MenuItem onClick={handleClose}>خروج</MenuItem>
+              <MenuItem onClick={() => Router.push("/panel/profile")}>
+                الصفحة الشخصية
+              </MenuItem>
+              <MenuItem onClick={logoutHandeler}>خروج</MenuItem>
             </Menu>
           </Box>
         </Container>
@@ -255,12 +269,6 @@ const HomePage = (props) => {
       </Box>
     </Box>
   );
-};
-
-HomePage.getInitialProps = (ctx) => {
-  const cookiesLoader = nextCookies(ctx);
-  const jwtCookie = cookiesLoader["META-AUTH-TOKEN"];
-  return { auth_token: jwtCookie };
 };
 
 export default connect((state) => state)(HomePage);

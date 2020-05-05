@@ -7,7 +7,7 @@ import auth from "../../helpers/auth.class";
 import cookie from "js-cookie";
 import { connect } from "react-redux";
 import nextCookies from "next-cookies";
-
+import { validAuth as loginCtx } from "../../helpers/login.ctx";
 import {
   Box,
   Grid,
@@ -137,20 +137,15 @@ const Login = (props) => {
       "https://use.fontawesome.com/releases/v5.12.0/css/all.css",
       document.querySelector("#font-awesome-css")
     );
-    if (props.auth_token) {
-      router.push("/panel/home");
-    }
-
-    if (!props.auth_token) {
-      isLoading(false);
-    }
+    isLoading(false);
   }, []);
 
   const [authLoad, setAuthLoad] = React.useState(false);
 
   // show notfication logic
 
-  const onsubmit = async (data) => {
+  const onsubmit = (data) => {
+
     setAuthLoad(true);
 
     if (snackRef) {
@@ -159,34 +154,32 @@ const Login = (props) => {
 
     const { email, password } = data;
 
-    const jwt = await auth.login({
-      email,
-      password,
-    });
-
-    if (jwt) {
-      setAuthLoad(false);
-      props.dispatch({
-        type: "AUTHENTICATION_LOGIN",
-        payload: await jwt.data.token,
+    const jwt = auth
+      .login({
+        email,
+        password,
+      })
+      .then((e) => {
+        if (e.data && e.data.token) {
+          props.dispatch({
+            type: "AUTHENTICATION_LOGIN",
+            payload: e.data.token,
+          });
+          const token = e.data.token;
+          cookie.set("META-AUTH-TOKEN", token);
+          router.push("/panel/home");
+          setAuthLoad(false);
+        } else {
+          if (e.message === "resource not found") {
+            throw Error("البيانات التي ادخلتها لا تطابق اي حساب");
+          }
+        }
+      })
+      .catch((e) => {
+        setSignInErorr(e.message);
+        setopen(true);
+        setAuthLoad(false);
       });
-    }
-
-    // handle if no user
-    if (jwt.error) {
-      // show a notfication for the error
-      setSignInErorr(jwt.error);
-      setopen(true);
-    }
-
-    if (!jwt.error) {
-      // here if no errors it sould save the user token and redirect to the home panel
-      const token = await jwt.data.token;
-
-      cookie.set("META-AUTH-TOKEN", token);
-
-      router.push("/panel/home");
-    }
   };
 
   const clases = styles();
@@ -451,10 +444,20 @@ const Login = (props) => {
   );
 };
 
-Login.getInitialProps = (ctx) => {
-  const cookiesLoader = nextCookies(ctx);
-  const jwtCookie = cookiesLoader["META-AUTH-TOKEN"];
-  return { auth_token: jwtCookie };
+Login.getInitialProps = async (ctx) => {
+  // check if login token is valid
+  try {
+    const cookiesLoader = nextCookies(ctx);
+    const jwtCookie = cookiesLoader["META-AUTH-TOKEN"];
+    const jwtCookieBrowser = cookie.get("META-AUTH-TOKEN");
+    if (Boolean(jwtCookie) || Boolean(jwtCookieBrowser)) {
+      await loginCtx({ ctx });
+      return { auth_token: jwtCookie || jwtCookieBrowser };
+    }
+    return { auth_token: null };
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export default connect((state) => {

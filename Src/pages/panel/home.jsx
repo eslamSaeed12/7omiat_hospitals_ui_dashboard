@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import Layout from "../../components/control_panel_layout";
-import { FETCH_DATA, FetchUserInformation } from "../../actions/actions";
+import { FETCH_DATA, syncfetchUserInofrmation } from "../../actions/actions";
 import { HashLoader } from "react-spinners";
 import {
   Container,
@@ -27,6 +27,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useEffect, useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import nextCookies from "next-cookies";
+import { validAuth } from "../../helpers/auth.ctx";
+
 import {
   Table,
   TableBody,
@@ -91,7 +93,7 @@ const styles = makeStyles((theme) => {
   };
 });
 
-const userAssignments = (id, hospitals, governments) => {
+const userAssignments = (id, governments, hospitals) => {
   const hospitalsArray =
     hospitals.filter((hos) => hos.created_by === id) || hos.updated_by === id;
 
@@ -99,10 +101,14 @@ const userAssignments = (id, hospitals, governments) => {
     (hos) => hos.created_by === id || hos.updated_by === id
   );
 
-  return [
-    { type: "مستشفي", data: [...hospitalsArray] },
-    { type: "محافظة", data: [...governmentsArray] },
-  ];
+  return {
+    hospitals: {
+      data: [...hospitalsArray],
+    },
+    govs: {
+      data: [...governmentsArray],
+    },
+  };
 };
 
 const ItemsSpinners = (props) => {
@@ -197,7 +203,7 @@ const TableOfActivity = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {govs.data.map((cell, id) => {
+            {govs.map((cell, id) => {
               return (
                 <TableRow key={cell.name + id}>
                   <TableCell component="th" scope="row">
@@ -206,10 +212,10 @@ const TableOfActivity = (props) => {
                   <TableCell align="left">{cell.name}</TableCell>
                   <TableCell align="left">
                     <Chip
-                      label={govs.type}
+                      label="محافظة"
                       variant="default"
                       style={{
-                        backgroundColor: colors.primary,
+                        backgroundColor: colors.success,
                         color: "#f8f8f8",
                       }}
                     />
@@ -245,7 +251,7 @@ const TableOfActivity = (props) => {
                 </TableRow>
               );
             })}
-            {hospitals.data.map((cell, id) => {
+            {hospitals.map((cell, id) => {
               return (
                 <TableRow key={cell.name + id}>
                   <TableCell component="th" scope="row">
@@ -254,10 +260,10 @@ const TableOfActivity = (props) => {
                   <TableCell align="left">{cell.name}</TableCell>
                   <TableCell align="left">
                     <Chip
-                      label={hospitals.type}
+                      label={"مستشفي"}
                       variant="default"
                       style={{
-                        backgroundColor: colors.primary,
+                        backgroundColor: colors.info,
                         color: "#f8f8f8",
                       }}
                     />
@@ -316,7 +322,6 @@ const Home = (props) => {
 
     if (props.fetch_api_data) {
       setSnackOpen(false);
-      // get username
     }
 
     if (props.fetch_api_data.govs && props.fetch_api_data.hospitals) {
@@ -329,18 +334,7 @@ const Home = (props) => {
           props.fetch_api_data.govs.data,
           props.fetch_api_data.hospitals.data
         );
-
         setUserActivity(assign);
-      }
-    }
-
-    if (props.fetch_api_data.users && props.fetch_api_data.users.data.length) {
-      const userAuthenticated = props.fetch_api_data.users.data.find(
-        (usr) => usr.id === props.id
-      );
-
-      if (userAuthenticated) {
-        props.getAuthUser(userAuthenticated);
       }
     }
   }, [props.fetch_api_data_isLoading]);
@@ -350,6 +344,12 @@ const Home = (props) => {
       setSnackOpen(true);
     }
   }, [props.fetch_api_data_error]);
+
+  useEffect(() => {
+    if (props.id) {
+      props.fetchAuthUser(props.auth_token, props.id);
+    }
+  }, [props.id]);
 
   if (!props.auth_token) {
     return (
@@ -401,8 +401,8 @@ const Home = (props) => {
             <Box py={2}>
               {userActivity ? (
                 <TableOfActivity
-                  govs={userActivity[0]}
-                  hospitals={userActivity[1]}
+                  govs={userActivity.govs.data}
+                  hospitals={userActivity.hospitals.data}
                 />
               ) : (
                 <Skeleton variant="rect" height="150px" />
@@ -425,19 +425,26 @@ const Home = (props) => {
   );
 };
 
-Home.getInitialProps = (ctx) => {
-  const cookiesLoader = nextCookies(ctx);
-  const jwtCookie = cookiesLoader["META-AUTH-TOKEN"];
-  const jwtDecoderPlugin = require("jwt-decode");
-  let jwtDecoded;
-  if (jwtCookie) {
-    jwtDecoded = jwtDecoderPlugin(jwtCookie);
+Home.getInitialProps = async (ctx) => {
+  try {
+    await validAuth({ ctx });
+
+    const cookiesLoader = nextCookies(ctx);
+    const jwtCookie = cookiesLoader["META-AUTH-TOKEN"];
+    const jwtDecoderPlugin = require("jwt-decode");
+
+    let jwtDecoded;
+    if (jwtCookie) {
+      jwtDecoded = jwtDecoderPlugin(jwtCookie);
+    }
+    return {
+      auth_token: jwtCookie,
+      mapboxToken: process.env.mapboxToken,
+      id: jwtDecoded ? jwtDecoded.id : null,
+    };
+  } catch (e) {
+    console.log(e);
   }
-  return {
-    auth_token: jwtCookie,
-    mapboxToken: process.env.mapboxToken,
-    id: jwtDecoded ? jwtDecoded.id : null,
-  };
 };
 
 const MapStateToProps = (state) => {
@@ -447,7 +454,7 @@ const MapStateToProps = (state) => {
 const MapDispatchToProps = (dispatch) => {
   return {
     FETCH_DATA: (jwt_token) => dispatch(FETCH_DATA({ jwt_token })),
-    getAuthUser: (payload) => dispatch(FetchUserInformation(payload)),
+    fetchAuthUser: (jwt, id) => dispatch(syncfetchUserInofrmation(jwt, id)),
   };
 };
 

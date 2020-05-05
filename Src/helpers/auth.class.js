@@ -21,10 +21,10 @@ class auth {
       }
 
       if (e.isAxiosError) {
-        return { error: "البيانات المدخله لا تطابق اي حساب" };
+        return Error(e.response.data.message);
       }
 
-      return { error: "حدث خطأ ما .. سنعمل علي اصلاحه في اقرب وقت" };
+      return Error("حدث خطأ ما .. سنعمل علي اصلاحه في اقرب وقت");
     }
   }
 }

@@ -3,7 +3,9 @@ export const initialState = {
   fetch_api_data: {},
   fetch_api_data_error: "",
   auth_token_api: "",
+  authUserLoad: false,
   authUser: {},
+  authUserErorr: "",
 };
 
 export function mainReducer(state = initialState, action) {
@@ -39,10 +41,24 @@ export function mainReducer(state = initialState, action) {
     };
   }
 
+  if (action.type === "FETCH_USER_DONE") {
+    return {
+      ...state,
+      authUserLoad: true,
+    };
+  }
+
   if (action.type === "FETCH_USER_INFO") {
     return {
       ...state,
-      authUser: action.payload,
+      authUser: action.payload.data,
+    };
+  }
+
+  if (action.type === "FETCH_USER_FAIL") {
+    return {
+      ...state,
+      authUserErorr: action.payload,
     };
   }
 
