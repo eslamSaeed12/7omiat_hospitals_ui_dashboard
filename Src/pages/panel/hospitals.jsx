@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import nextCookies from "next-cookies";
 import { validAuth } from "../../helpers/auth.ctx";
 import { syncfetchUserInofrmation } from "../../actions/actions";
-import UsersImageBackground from "../../../public/images/users_background.svg";
+import UsersImageBackground from "../../../public/images/hospitals.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
 import * as yup from "yup";
@@ -61,7 +61,7 @@ const tableIcons = {
 const styles = makeStyles((theme) => {
   return {
     svgBackground: {
-      width: "10%",
+      width: "50vw",
     },
   };
 });
@@ -121,7 +121,6 @@ const hospitalsPage = (props) => {
           return {
             ...cell,
             createdAt: new Date(cell.createdAt).toLocaleString("ar"),
-            updatedAt: new Date(cell.updatedAt).toLocaleString("ar"),
             coords: cell.coords.coordinates,
             updated_by: "",
           };
@@ -169,7 +168,6 @@ const hospitalsPage = (props) => {
                 },
                 { title: "المحافظة", field: "gov_id", lookup: lookupList() },
                 { title: "انشاء", field: "createdAt" },
-                { title: "تحديث", field: "updatedAt" },
                 {
                   title: "بواسطة",
                   field: "created_by",
@@ -214,9 +212,12 @@ const hospitalsPage = (props) => {
     <Layout>
       <Box>
         <Container>
-          <Box textAlign="center">
+          <Box textAlign="center" mb={4}>
             <Typography variant="h4">المستشفيات</Typography>
-            <img src={UsersImageBackground} className={clases.svgBackground} />
+            <img
+              src={UsersImageBackground}
+              className={"ROLES-BACKGROUND-IMAGE"}
+            />
           </Box>
           {lookup && usersLookup ? (
             <MaterialTable
@@ -226,6 +227,10 @@ const hospitalsPage = (props) => {
               title="ادرة المستشفيات"
               columns={state.columns}
               data={state.data}
+              style={{
+                boxShadow:
+                  "0px 9px 11px -5px rgba(0,0,0,0.2), 0px 18px 28px 2px rgba(0,0,0,0.14), 0px 7px 34px 6px rgba(0,0,0,0.12)",
+              }}
               editable={{
                 onRowAdd: (newData) => {
                   return new Promise((resolve, reject) => {
@@ -253,9 +258,6 @@ const hospitalsPage = (props) => {
                                 ...savedData.data.data,
                                 createdAt: new Date(
                                   savedData.data.data.createdAt
-                                ).toLocaleString("ar"),
-                                updatedAt: new Date(
-                                  savedData.data.data.updatedAt
                                 ).toLocaleString("ar"),
                                 coords: savedData.data.data.coords.coordinates,
                               });
@@ -313,9 +315,6 @@ const hospitalsPage = (props) => {
                                 ...savedData.data.data,
                                 createdAt: new Date(
                                   savedData.data.data.createdAt
-                                ).toLocaleString("ar"),
-                                updatedAt: new Date(
-                                  savedData.data.data.updatedAt
                                 ).toLocaleString("ar"),
                                 coords: savedData.data.data.coords.coordinates,
                               };

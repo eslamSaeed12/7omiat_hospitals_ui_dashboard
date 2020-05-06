@@ -6,6 +6,7 @@ import { Skeleton } from "@material-ui/lab";
 import PageLoader from "../../components/PageLoader";
 import { colors } from "../../../public/styles.json";
 import Layout from "../../components/control_panel_layout";
+import ads from "../../../public/images/adms.svg";
 import V from "validator";
 import CDialog from "../../components/ErrorsDialog";
 import { connect } from "react-redux";
@@ -58,8 +59,14 @@ const tableIcons = {
 // here styling
 const styles = makeStyles((theme) => {
   return {
+    table: {
+      boxShadow: theme.shadows[18],
+    },
     svgBackground: {
-      width: "10%",
+      maxWidth: "60%",
+      backgroundPosition: "center",
+      backgroundSize: "cover",
+      zIndex: 5555,
     },
   };
 });
@@ -137,7 +144,6 @@ const usersPage = (props) => {
       });
 
     const getAllUsers = async () => {
-        
       const usersResolver = userClient(props.auth_token);
 
       const users = await usersResolver.findAll();
@@ -169,7 +175,7 @@ const usersPage = (props) => {
         <Container>
           <Box textAlign="center">
             <Typography variant="h4">المشرفين</Typography>
-            <img src={UsersImageBackground} className={clases.svgBackground} />
+            <img src={ads} className={"ADMINS-BACKGROUND-IMAGE"} />
           </Box>
           {lookup ? (
             <MaterialTable
@@ -177,6 +183,10 @@ const usersPage = (props) => {
               localization={{ header: { actions: "ادارة" } }}
               icons={tableIcons}
               title="ادارة المشرفين"
+              style={{
+                boxShadow:
+                  "0px 9px 11px -5px rgba(0,0,0,0.2), 0px 18px 28px 2px rgba(0,0,0,0.14), 0px 7px 34px 6px rgba(0,0,0,0.12)",
+              }}
               columns={state.columns}
               data={state.data}
               editable={{

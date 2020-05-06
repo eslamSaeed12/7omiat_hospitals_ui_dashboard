@@ -109,7 +109,7 @@ const ProfilePage = (props) => {
                 xs={8}
                 style={{ margin: "0 auto" }}
               >
-                <Paper elevation={6}>
+                <Paper elevation={18}>
                   <Box py={4} textAlign="center">
                     <form onSubmit={handleSubmit(handleProfileForm)}>
                       <Box my={3}>

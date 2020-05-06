@@ -27,7 +27,7 @@ import { validAuth } from "../../helpers/auth.ctx";
 import nextCookies from "next-cookies";
 import { Skeleton } from "@material-ui/lab";
 import { useState, useEffect } from "react";
-
+import logsBKG from "../../../public/images/logs.svg";
 const LogsPage = (props) => {
   const [loading, setLoading] = useState(true);
   const [logsLoad, setLogsLoad] = useState(false);
@@ -111,8 +111,15 @@ const LogsPage = (props) => {
           <Typography variant="h4" align="center">
             السجلات
           </Typography>
+          <Box align="center">
+            <img src={logsBKG} className="LOGS-BACKGROUND-IMAGE"/>
+          </Box>
           {logsLoad ? (
-            <TableContainer component={Paper} style={{ dir: "ltr" }}>
+            <TableContainer
+              component={Paper}
+              style={{ dir: "ltr", margin: "0 auto" }}
+              elevation={18}
+            >
               <Table>
                 <TableHead>
                   <TableRow>

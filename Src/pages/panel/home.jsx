@@ -77,7 +77,6 @@ const styles = makeStyles((theme) => {
       display: "inline-flex",
     },
     activityTable: {
-      maxWidth: "80%",
       margin: "0 auto",
       [theme.breakpoints.down("md")]: {
         maxWidth: "100%",
@@ -130,7 +129,7 @@ const Items = (props) => {
   const ItemsList = Lista.map((data, index) => {
     return (
       <Grid item md={3} xs={6} className={clases.papers} key={index.toString()}>
-        <Paper elevation={3}>
+        <Paper elevation={18}>
           <Box display="flex" flexDirection="row">
             <Box
               style={{
@@ -191,7 +190,7 @@ const TableOfActivity = (props) => {
   const clases = styles();
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} elevation={18}>
         <Table className={clases.activityTable} aria-label="actvity-table">
           <TableHead>
             <TableRow>
@@ -199,7 +198,6 @@ const TableOfActivity = (props) => {
               <TableCell>الاسم</TableCell>
               <TableCell>النوع</TableCell>
               <TableCell>التاريخ</TableCell>
-              <TableCell>اداره</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -223,31 +221,6 @@ const TableOfActivity = (props) => {
                   <TableCell align="left">
                     {new Date(cell.createdAt).toLocaleString("ar")}
                   </TableCell>
-                  <TableCell align="left">
-                    <Tooltip title="تعديل">
-                      <Fab
-                        size="small"
-                        style={{
-                          backgroundColor: colors.warning,
-                          color: "#f8f8f8",
-                        }}
-                      >
-                        <Edit />
-                      </Fab>
-                    </Tooltip>
-                    <Tooltip title="حذف">
-                      <Fab
-                        size="small"
-                        className={clases.fabDanger}
-                        style={{
-                          color: "#f8f8f8",
-                          backgroundColor: colors.danger,
-                        }}
-                      >
-                        <Delete />
-                      </Fab>
-                    </Tooltip>
-                  </TableCell>
                 </TableRow>
               );
             })}
@@ -270,31 +243,6 @@ const TableOfActivity = (props) => {
                   </TableCell>
                   <TableCell align="left">
                     {new Date(cell.createdAt).toLocaleString("ar")}
-                  </TableCell>
-                  <TableCell align="left">
-                    <Tooltip title="تعديل">
-                      <Fab
-                        size="small"
-                        style={{
-                          backgroundColor: colors.warning,
-                          color: "#f8f8f8",
-                        }}
-                      >
-                        <Edit />
-                      </Fab>
-                    </Tooltip>
-                    <Tooltip title="حذف">
-                      <Fab
-                        size="small"
-                        className={clases.fabDanger}
-                        style={{
-                          color: "#f8f8f8",
-                          backgroundColor: colors.danger,
-                        }}
-                      >
-                        <Delete />
-                      </Fab>
-                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
@@ -397,17 +345,18 @@ const Home = (props) => {
             <Typography variant="h4" align="center">
               مساهامتك
             </Typography>
-
-            <Box py={2}>
-              {userActivity ? (
-                <TableOfActivity
-                  govs={userActivity.govs.data}
-                  hospitals={userActivity.hospitals.data}
-                />
-              ) : (
-                <Skeleton variant="rect" height="150px" />
-              )}
-            </Box>
+            <Grid item  md={8} xs={11} style={{ margin: "0 auto" }}>
+              <Box py={2}>
+                {userActivity ? (
+                  <TableOfActivity
+                    govs={userActivity.govs.data}
+                    hospitals={userActivity.hospitals.data}
+                  />
+                ) : (
+                  <Skeleton variant="rect" height="150px" />
+                )}
+              </Box>
+            </Grid>
           </Box>
 
           {props.fetch_api_data_error ? (

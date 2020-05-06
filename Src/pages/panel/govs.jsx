@@ -1,6 +1,5 @@
 import govClient from "../../helpers/govs.client";
 import userClient from "../../helpers/user.client";
-import { useForm } from "react-hook-form";
 import { useState, useEffect, forwardRef } from "react";
 import { Box, Container, Typography, Grid } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
@@ -12,7 +11,7 @@ import { connect } from "react-redux";
 import nextCookies from "next-cookies";
 import { validAuth } from "../../helpers/auth.ctx";
 import { syncfetchUserInofrmation } from "../../actions/actions";
-import GovsImageBackground from "../../../public/images/govs_background.svg";
+import GovsImageBackground from "../../../public/images/govs.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
 import * as yup from "yup";
@@ -59,7 +58,7 @@ const tableIcons = {
 const styles = makeStyles((theme) => {
   return {
     svgBackground: {
-      width: "10%",
+      width: "35vw",
     },
   };
 });
@@ -160,13 +159,20 @@ const govsPage = (props) => {
         <Container>
           <Box textAlign="center">
             <Typography variant="h4">المحافظات</Typography>
-            <img src={GovsImageBackground} className={clases.svgBackground} />
+            <img
+              src={GovsImageBackground}
+              className={"GOVS-BACKGROUND-IMAGE"}
+            />
           </Box>
           {lookup ? (
             <MaterialTable
               isLoading={govsLoad}
               localization={{ header: { actions: "ادارة" } }}
               icons={tableIcons}
+              style={{
+                boxShadow:
+                  "0px 9px 11px -5px rgba(0,0,0,0.2), 0px 18px 28px 2px rgba(0,0,0,0.14), 0px 7px 34px 6px rgba(0,0,0,0.12)",
+              }}
               title="ادارة المحافظات"
               columns={state.columns}
               data={state.data}

@@ -34,9 +34,105 @@ $primary-color: $P-PRIMARY;
 body {
     font-family: bahij;
     color: $F-DARK;
-    background-color: #f8f8f8;
 }
 
 a {
     color: "inherit"
+}
+
+.LOGS-BACKGROUND-IMAGE {
+    @media(min-width:992px) {
+        max-width: 50vw;
+    }
+
+    @media(max-width:991px) {
+        max-width: 60vw;
+    }
+
+    @media(max-width:767px) {
+        max-width: 65vw;
+    }
+
+
+    @media(max-width:567px) {
+        max-width: 75vw;
+    }
+}
+
+.ERRORS-BACKGROUND-IMAGE {
+    @media(min-width:992px) {
+        max-width: 40vw;
+    }
+
+    @media(max-width:991px) {
+        max-width: 50vw;
+    }
+
+    @media(max-width:767px) {
+        max-width: 55vw;
+    }
+
+
+    @media(max-width:567px) {
+        max-width: 75vw;
+    }
+}
+
+.ADMINS-BACKGROUND-IMAGE {
+    
+    @media(min-width:992px) {
+        max-width: 40vw;
+    }
+
+    @media(max-width:991px) {
+        max-width: 50vw;
+    }
+
+    @media(max-width:767px) {
+        max-width: 55vw;
+    }
+
+
+    @media(max-width:567px) {
+        max-width: 75vw;
+    }
+}
+
+.ROLES-BACKGROUND-IMAGE {
+    
+    @media(min-width:992px) {
+        max-width: 40vw;
+    }
+
+    @media(max-width:991px) {
+        max-width: 50vw;
+    }
+
+    @media(max-width:767px) {
+        max-width: 55vw;
+    }
+
+
+    @media(max-width:567px) {
+        max-width: 75vw;
+    }
+}
+.GOVS-BACKGROUND-IMAGE {
+    
+    @media(min-width:992px) {
+        max-width: 30vw;
+    }
+
+    @media(max-width:991px) {
+        max-width: 40vw;
+    }
+
+    @media(max-width:767px) {
+        max-width: 45vw;
+    }
+
+
+    @media(max-width:567px) {
+        max-width: 65vw;
+    }
 }

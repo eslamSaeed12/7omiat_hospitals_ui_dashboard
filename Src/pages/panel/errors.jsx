@@ -28,6 +28,7 @@ import nextCookies from "next-cookies";
 import { Skeleton } from "@material-ui/lab";
 import { useState, useEffect } from "react";
 import jsCookie from "js-cookie";
+import svgBackground from "../../../public/images/errors.svg";
 const LogsPage = (props) => {
   const [loading, setLoading] = useState(true);
   const [logsLoad, setLogsLoad] = useState(false);
@@ -112,8 +113,18 @@ const LogsPage = (props) => {
           <Typography variant="h4" align="center">
             الاعطال
           </Typography>
+          <Box align="center" my={3}>
+            <img
+              src={svgBackground}
+              className="ERRORS-BACKGROUND-IMAGE"
+            />
+          </Box>
           {logsLoad ? (
-            <TableContainer component={Paper} style={{ dir: "ltr" }}>
+            <TableContainer
+              component={Paper}
+              style={{ dir: "ltr" }}
+              elevation={18}
+            >
               <Table>
                 <TableHead>
                   <TableRow>

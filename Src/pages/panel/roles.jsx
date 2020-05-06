@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import nextCookies from "next-cookies";
 import { validAuth } from "../../helpers/auth.ctx";
 import { syncfetchUserInofrmation } from "../../actions/actions";
-import RolesImageBackground from "../../../public/images/roles_background.svg";
+import RolesImageBackground from "../../../public/images/roles.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
 import * as yup from "yup";
@@ -56,7 +56,7 @@ const tableIcons = {
 const styles = makeStyles((theme) => {
   return {
     svgBackground: {
-      width: "20%",
+      maxWidth: "40%",
     },
   };
 });
@@ -84,7 +84,6 @@ const rolePage = (props) => {
   // component did mount
   useEffect(() => {
     setLoading(false);
-    console.log(props);
   }, []);
   useEffect(() => {
     props.fetchAuthUser(props.auth_token, props.id);
@@ -120,9 +119,16 @@ const rolePage = (props) => {
         <Container>
           <Box textAlign="center">
             <Typography variant="h4">الصلاحيات</Typography>
-            <img src={RolesImageBackground} className={clases.svgBackground} />
+            <img
+              src={RolesImageBackground}
+              className={"ROLES-BACKGROUND-IMAGE"}
+            />
           </Box>
           <MaterialTable
+            style={{
+              boxShadow:
+                "0px 9px 11px -5px rgba(0,0,0,0.2), 0px 18px 28px 2px rgba(0,0,0,0.14), 0px 7px 34px 6px rgba(0,0,0,0.12)",
+            }}
             isLoading={roleLoad}
             localization={{ header: { actions: "ادارة" } }}
             icons={tableIcons}

@@ -58,5 +58,7 @@
     "validator": "^13.0.0",
     "yup": "^0.28.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^26.0.0"
+  }
 }

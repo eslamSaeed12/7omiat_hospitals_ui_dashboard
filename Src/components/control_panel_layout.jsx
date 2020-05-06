@@ -70,8 +70,8 @@ const styles = makeStyles((theme) => {
   return {
     root: {},
     sidebar: {
-      backgroundColor: colors.primary,
       color: "#f8f8f8",
+      backgroundColor: colors.primary,
       [theme.breakpoints.down("sm")]: {
         flexDirection: "row",
         height: "auto",
@@ -99,10 +99,12 @@ const styles = makeStyles((theme) => {
     sidebarContainer: {
       boxShadow: theme.shadows[20],
       width: "8%",
+      //overflowX: "hidden",
       position: "fixed",
       left: 0,
       zIndex: 555,
       [theme.breakpoints.down("sm")]: {
+        overflowX: "scroll",
         bottom: 0,
         width: "100%",
       },
@@ -126,7 +128,7 @@ const SideBar = (props) => {
     const list = categories.map((cat, index) => {
       return (
         <Fragment key={index.toString()}>
-          <Link href={cat.href} >
+          <Link href={cat.href}>
             <Button>
               <Box
                 textAlign="center"
@@ -221,7 +223,7 @@ const HomePage = (props) => {
     );
   }
   return (
-    <Box>
+    <Box style={{ backgroundColor: "#ffff" }}>
       <Box className={clases.sidebarContainer}>
         <SideBar />
       </Box>
@@ -265,7 +267,7 @@ const HomePage = (props) => {
             </Menu>
           </Box>
         </Container>
-        {props.children}
+        <Box mb={4}>{props.children}</Box>
       </Box>
     </Box>
   );
